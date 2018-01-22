@@ -25,6 +25,7 @@ set(PAHO_MQTT_PACKET_SERVER_SOURCE  ${PAHO_MQTT_SDK}/MQTTPacket/src/MQTTFormat.c
                                     ${PAHO_MQTT_SDK}/MQTTPacket/src/MQTTSubscribeServer.c
                                     ${PAHO_MQTT_SDK}/MQTTPacket/src/MQTTUnsubscribeServer.c)
 
+file(GLOB SOURCES "${PAHO_MQTT_SDK}/MQTTPacket/src/*.c")
 add_library(paho-embed-mqtt3c OBJECT ${SOURCES})
 # install(TARGETS paho-embed-mqtt3c DESTINATION /usr/lib)
 target_compile_definitions(paho-embed-mqtt3c PRIVATE MQTT_SERVER MQTT_CLIENT PAHO_MQTT_PLATFORM_DEFINITIONS)
@@ -37,7 +38,7 @@ target_compile_definitions(MQTTPacketServer PRIVATE MQTT_SERVER PAHO_MQTT_PLATFO
 
 add_library(MQTTClient OBJECT   ${PAHO_MQTT_PACKET_CLIENT_SOURCE}
                                 ${PAHO_MQTT_SDK}/MQTTClient-C/src/MQTTClient.c)
-target_compile_definitions(MQTTClient PRIVATE MQTT_CLIENT PAHO_MQTT_PLATFORM_DEFINITIONS)
+target_compile_definitions(MQTTClient PRIVATE MQTT_CLIENT MQTTCLIENT_QOS2=1 PAHO_MQTT_PLATFORM_DEFINITIONS)
 
 include_directories(${PAHO_MQTT_SDK}/MQTTPacket/src
                     ${PAHO_MQTT_SDK}/MQTTClient-C/src)
