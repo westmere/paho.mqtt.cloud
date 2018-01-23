@@ -4,11 +4,6 @@ if(NOT PAHO_MQTT_SDK)
 set(PAHO_MQTT_SDK ${CMAKE_CURRENT_LIST_DIR}/paho.mqtt.embedded-c)
 endif()
 
-if(NOT PAHO_MQTT_PLATFORM_DEFINITIONS OR NOT PAHO_MQTT_PLATFORM_SOURCES)
-set(PAHO_MQTT_PLATFORM_DEFINITIONS MQTT_TASK MQTT_LWIP MQTTCLIENT_PLATFORM_HEADER=${CMAKE_CURRENT_LIST_DIR}/platforms/FreeRTOS/MQTTFreeRTOS.h)
-set(PAHO_MQTT_PLATFORM_SOURCES  ${CMAKE_CURRENT_LIST_DIR}/platforms/FreeRTOS/MQTTFreeRTOS.c)
-endif()
-
 set(PAHO_MQTT_PACKET_CLIENT_SOURCE  ${PAHO_MQTT_SDK}/MQTTPacket/src/MQTTFormat.c
                                     ${PAHO_MQTT_SDK}/MQTTPacket/src/MQTTPacket.c
                                     ${PAHO_MQTT_SDK}/MQTTPacket/src/MQTTSerializePublish.c
@@ -28,22 +23,16 @@ set(PAHO_MQTT_PACKET_SERVER_SOURCE  ${PAHO_MQTT_SDK}/MQTTPacket/src/MQTTFormat.c
 file(GLOB SOURCES "${PAHO_MQTT_SDK}/MQTTPacket/src/*.c")
 add_library(paho-embed-mqtt3c OBJECT ${SOURCES})
 # install(TARGETS paho-embed-mqtt3c DESTINATION /usr/lib)
-target_compile_definitions(paho-embed-mqtt3c PRIVATE MQTT_SERVER MQTT_CLIENT ${PAHO_MQTT_PLATFORM_DEFINITIONS})
+target_compile_definitions(paho-embed-mqtt3c PRIVATE MQTT_SERVER MQTT_CLIENT)
 
-add_library(MQTTPacketClient OBJECT ${PAHO_MQTT_PACKET_CLIENT_SOURCE}
-                                    ${PAHO_MQTT_PLATFORM_SOURCES}
-)
-target_compile_definitions(MQTTPacketClient PRIVATE MQTT_CLIENT ${PAHO_MQTT_PLATFORM_DEFINITIONS})
+add_library(MQTTPacketClient OBJECT ${PAHO_MQTT_PACKET_CLIENT_SOURCE})
+target_compile_definitions(MQTTPacketClient PRIVATE MQTT_CLIENT)
 
-add_library(MQTTPacketServer OBJECT ${PAHO_MQTT_PACKET_SERVER_SOURCE}
-                                    ${PAHO_MQTT_PLATFORM_SOURCES}
-)
-target_compile_definitions(MQTTPacketServer PRIVATE MQTT_SERVER ${PAHO_MQTT_PLATFORM_DEFINITIONS})
+add_library(MQTTPacketServer OBJECT ${PAHO_MQTT_PACKET_SERVER_SOURCE})
+target_compile_definitions(MQTTPacketServer PRIVATE MQTT_SERVER)
 
-add_library(MQTTClient OBJECT   ${PAHO_MQTT_PACKET_CLIENT_SOURCE}
-                                ${PAHO_MQTT_SDK}/MQTTClient-C/src/MQTTClient.c
-                                ${PAHO_MQTT_PLATFORM_SOURCES})
-target_compile_definitions(MQTTClient PRIVATE MQTT_CLIENT MQTTCLIENT_QOS2=1 ${PAHO_MQTT_PLATFORM_DEFINITIONS})
+add_library(MQTTClient OBJECT   ${PAHO_MQTT_PACKET_CLIENT_SOURCE} ${PAHO_MQTT_SDK}/MQTTClient-C/src/MQTTClient.c)
+target_compile_definitions(MQTTClient PRIVATE MQTT_CLIENT MQTTCLIENT_QOS2=1)
 
 include_directories(${PAHO_MQTT_SDK}/MQTTPacket/src
                     ${PAHO_MQTT_SDK}/MQTTClient-C/src)

@@ -14,11 +14,29 @@
  *    Allan Stockdill-Mander - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#if !defined(MQTTFreeRTOS_H)
-#define MQTTFreeRTOS_H
+#if !defined(MQTT_MUTEX_H)
+#define MQTT_MUTEX_H
 
-#include "Mutex.h"
-#include "Timer.h"
-#include "lwip/Network.h"
+#include "FreeRTOS.h"
+#include "semphr.h"
+#include "task.h"
+
+typedef unsigned portBASE_TYPE UBaseType_t;
+typedef xQueueHandle TaskHandle_t;
+typedef xQueueHandle TaskHandle_t;
+typedef xQueueHandle SemaphoreHandle_t;
+typedef xTimeOutType TimeOut_t;
+typedef portTickType TickType_t;
+#define portTICK_PERIOD_MS portTICK_RATE_MS
+
+
+typedef struct Mutex
+{
+	SemaphoreHandle_t sem;
+} Mutex;
+
+void MutexInit(Mutex*);
+int MutexLock(Mutex*);
+int MutexUnlock(Mutex*);
 
 #endif

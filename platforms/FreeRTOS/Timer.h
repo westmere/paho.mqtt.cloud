@@ -14,11 +14,24 @@
  *    Allan Stockdill-Mander - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#if !defined(MQTTFreeRTOS_H)
-#define MQTTFreeRTOS_H
+#if !defined(MQTT_TIMER_H)
+#define MQTT_TIMER_H
 
-#include "Mutex.h"
-#include "Timer.h"
-#include "lwip/Network.h"
+#include "FreeRTOS.h"
+typedef xTimeOutType TimeOut_t;
+typedef portTickType TickType_t;
+#define portTICK_PERIOD_MS portTICK_RATE_MS
+
+typedef struct Timer 
+{
+	TickType_t xTicksToWait;
+	TimeOut_t xTimeOut;
+} Timer;
+
+void TimerInit(Timer*);
+char TimerIsExpired(Timer*);
+void TimerCountdownMS(Timer*, unsigned int);
+void TimerCountdown(Timer*, unsigned int);
+int TimerLeftMS(Timer*);
 
 #endif
