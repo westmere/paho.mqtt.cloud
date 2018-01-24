@@ -14,27 +14,11 @@
  *    Allan Stockdill-Mander - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#if !defined(MQTT_NETWORK_H)
-#define MQTT_NETWORK_H
+#if !defined(MQTTFreeRTOS_H)
+#define MQTTFreeRTOS_H
 
-#include "FreeRTOS.h"
-
-typedef xTimeOutType TimeOut_t;
-typedef portTickType TickType_t;
-#define portTICK_PERIOD_MS portTICK_RATE_MS
-
-typedef struct Network Network;
-
-struct Network
-{
-	int my_socket;
-	int (*mqttread) (Network*, unsigned char*, int, int);
-	int (*mqttwrite) (Network*, unsigned char*, int, int);
-	void (*disconnect) (Network*);
-};
-
-void NetworkInit(Network*);
-int NetworkConnect(Network*, char*, int);
-/*int NetworkConnectTLS(Network*, char*, int, SlSockSecureFiles_t*, unsigned char, unsigned int, char);*/
+#include "Thread.h"
+#include "Timer.h"
+#include "lwip/Network.h"
 
 #endif

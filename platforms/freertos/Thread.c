@@ -16,6 +16,7 @@
  *******************************************************************************/
 
 #include "MQTTFreeRTOS.h"
+#include "Thread.h"
 #define portTICK_PERIOD_MS portTICK_RATE_MS
 
 int ThreadStart(Thread* thread, void (*fn)(void*), void* arg)

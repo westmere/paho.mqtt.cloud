@@ -29,6 +29,10 @@ typedef xTimeOutType TimeOut_t;
 typedef portTickType TickType_t;
 #define portTICK_PERIOD_MS portTICK_RATE_MS
 
+typedef struct Thread
+{
+	TaskHandle_t task;
+} Thread;
 
 typedef struct Mutex
 {
