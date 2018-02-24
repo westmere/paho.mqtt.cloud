@@ -29,10 +29,6 @@ set(PAHO_MQTT_PACKET_SERVER_SOURCE  ${PAHO_MQTT_SDK}/MQTTPacket/src/MQTTFormat.c
 # add_library(paho-embed-mqtt3c-object OBJECT ${SOURCES})
 # target_compile_definitions(paho-embed-mqtt3c-object PRIVATE MQTT_SERVER MQTT_CLIENT)
 
-if(MQTT_CLOUD_DEBUG)
-    add_definitions(-DMQTT_CLOUD_DEBUG)
-endif(MQTT_CLOUD_DEBUG)
-
 if(USE_OBJECT_MQTT_SERVER_LIBRARY)
     add_library(MQTTPacketServerObject OBJECT ${PAHO_MQTT_PACKET_SERVER_SOURCE})
     target_compile_definitions(MQTTPacketServerObject PRIVATE MQTT_SERVER)
@@ -46,6 +42,9 @@ target_compile_definitions(MQTTClientObject PRIVATE MQTT_CLIENT MQTTCLIENT_QOS2=
 
 if(USE_OBJECT_MQTT_CLOUD_LIBRARY)
     add_library(MQTTCloudObject OBJECT   MQTTCloud/MQTTCloud.c)
+    if(MQTT_CLOUD_DEBUG)
+        target_compile_definitions(MQTTCloudObject PRIVATE MQTT_CLOUD_DEBUG)
+    endif(MQTT_CLOUD_DEBUG)
 endif(USE_OBJECT_MQTT_CLOUD_LIBRARY)
 
 include_directories(${PAHO_MQTT_SDK}/MQTTPacket/src)
