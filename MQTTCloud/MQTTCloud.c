@@ -1,6 +1,12 @@
 #include "MQTTClient.h"
 #include "MQTTCloud.h"
 
+#ifdef MQTT_CLOUD_DEBUG
+#define MQTT_PRINTF printf
+#else
+#define MQTT_PRINTF(fmt,args...)
+#endif
+
 int MQTTCLoudClientInit(struct MQTTCLoud *c, MQTTClient *client, Network *network,
                         const char *host, unsigned int port,
                         unsigned int command_timeout_ms,
@@ -25,7 +31,7 @@ int MQTTCLoudClientInit(struct MQTTCLoud *c, MQTTClient *client, Network *networ
 	c->network = network;
 #ifdef MQTT_TASK
     rc = MQTTStartTask(c->client)
-    printf("Return code from start tasks is %d\n", rc);
+    MQTT_PRINTF("Return code from start tasks is %d\n", rc);
 #endif
     return rc;
 }
@@ -37,7 +43,7 @@ static int MQTTCLoudClientConnect(struct MQTTCLoud *c)
 	if(!c->network->isconnected(c->network))
 	{
 		rc = NetworkConnect(c->network, c->host, c->port);
-		printf("Return code from network connect: %s:%d is %d\n", c->host, c->port, rc);
+		MQTT_PRINTF("Return code from network connect: %s:%d is %d\n", c->host, c->port, rc);
 		if(rc)
 		{
 //			c->network->disconnect(c->network);
@@ -54,16 +60,16 @@ static int MQTTCLoudClientSubscribe(struct MQTTCLoud *c)
 
 	for(i=0;c->config->topics && c->config->topics[i].topicFilter;i++)
 	{
-		printf("MQTT subscribing to topic \"%s\"\n", c->config->topics[i].topicFilter);
+		MQTT_PRINTF("MQTT subscribing to topic \"%s\"\n", c->config->topics[i].topicFilter);
 		rc=MQTTSubscribe(c->client, c->config->topics[i].topicFilter, c->config->topics[i].qos, c->config->topics[i].messageHandler);
 		if(rc)
 		{
-			printf("Return code from MQTT subscribe is %d\n", rc);
+			MQTT_PRINTF("Return code from MQTT subscribe is %d\n", rc);
 			return rc;
 		}
 		else
 		{
-			printf("MQTT subscribe to topic \"%s\"\n", c->config->topics[i].topicFilter);
+			MQTT_PRINTF("MQTT subscribe to topic \"%s\"\n", c->config->topics[i].topicFilter);
 		}
 	}
 
@@ -76,11 +82,11 @@ int MQTTCLoudClientPoll(struct MQTTCLoud *c)
 
 	if(!MQTTIsConnected(c->client))
 	{
-		printf("MQTT is disconnected, reconnecting...\n");
+		MQTT_PRINTF("MQTT is disconnected, reconnecting...\n");
 		rc = MQTTCLoudClientConnect(c);
 		if(rc)
 		{
-			printf("Return code from MQTT connect is %d\n", rc);
+			MQTT_PRINTF("Return code from MQTT connect is %d\n", rc);
 			if(c->network->isconnected(c->network))
 			{
 				c->network->disconnect(c->network);
@@ -89,7 +95,7 @@ int MQTTCLoudClientPoll(struct MQTTCLoud *c)
 		}
 		else
 		{
-			printf("MQTT Connected\n");
+			MQTT_PRINTF("MQTT Connected\n");
 		}
 
 		rc=MQTTCLoudClientSubscribe(c);

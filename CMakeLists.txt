@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 2.8)
 
+option(MQTT_CLOUD_DEBUG "Enable MQTT cloud debug." OFF)
 option(USE_OBJECT_MQTT_CLOUD_LIBRARY "Build MQTT cloud object library." OFF)
 option(USE_OBJECT_MQTT_SERVER_LIBRARY "Build MQTT server object library." OFF)
 
@@ -28,10 +29,14 @@ set(PAHO_MQTT_PACKET_SERVER_SOURCE  ${PAHO_MQTT_SDK}/MQTTPacket/src/MQTTFormat.c
 # add_library(paho-embed-mqtt3c-object OBJECT ${SOURCES})
 # target_compile_definitions(paho-embed-mqtt3c-object PRIVATE MQTT_SERVER MQTT_CLIENT)
 
+if(MQTT_CLOUD_DEBUG)
+    add_definitions(-DMQTT_CLOUD_DEBUG)
+endif(MQTT_CLOUD_DEBUG)
+
 if(USE_OBJECT_MQTT_SERVER_LIBRARY)
     add_library(MQTTPacketServerObject OBJECT ${PAHO_MQTT_PACKET_SERVER_SOURCE})
     target_compile_definitions(MQTTPacketServerObject PRIVATE MQTT_SERVER)
-endif()
+endif(USE_OBJECT_MQTT_SERVER_LIBRARY)
 
 add_library(MQTTPacketClientObject OBJECT ${PAHO_MQTT_PACKET_CLIENT_SOURCE})
 target_compile_definitions(MQTTPacketClientObject PRIVATE MQTT_CLIENT)
@@ -41,6 +46,6 @@ target_compile_definitions(MQTTClientObject PRIVATE MQTT_CLIENT MQTTCLIENT_QOS2=
 
 if(USE_OBJECT_MQTT_CLOUD_LIBRARY)
     add_library(MQTTCloudObject OBJECT   MQTTCloud/MQTTCloud.c)
-endif()
+endif(USE_OBJECT_MQTT_CLOUD_LIBRARY)
 
 include_directories(${PAHO_MQTT_SDK}/MQTTPacket/src)
