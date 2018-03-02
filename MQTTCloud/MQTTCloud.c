@@ -24,7 +24,6 @@ int MQTTCLoudClientInit(struct MQTTCLoud *c, MQTTClient *client, Network *networ
 	c->command_timeout_ms = command_timeout_ms;
 
 	c->config = config;
-	NetworkInit(network);
 	MQTTClientInit(client, network, command_timeout_ms, c->sendbuf, MQTT_CLOUD_SENDBUF_SIZE, c->readbuf, MQTT_CLOUD_READBUF_SIZE);
 
 	c->client = client;
