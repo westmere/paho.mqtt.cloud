@@ -45,8 +45,8 @@ struct MQTTCLoud
     const struct MQTTCLoudConfig *config;
     MQTTClient *client;
     Network *network;
-    unsigned char sendbuf[128];
-    unsigned char readbuf[128];
+    unsigned char sendbuf[MQTT_CLOUD_SENDBUF_SIZE];
+    unsigned char readbuf[MQTT_CLOUD_READBUF_SIZE];
     char host[MQTT_CLOUD_HOSTNAME_SIZE];
     unsigned int port;
     unsigned int command_timeout_ms;
